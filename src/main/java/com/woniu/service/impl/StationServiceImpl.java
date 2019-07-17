@@ -2,9 +2,11 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.woniu.model.Station;
 import com.woniu.service.IStationService;
-
+@Service
 public class StationServiceImpl implements IStationService {
 
 	@Override

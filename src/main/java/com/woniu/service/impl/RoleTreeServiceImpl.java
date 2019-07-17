@@ -2,9 +2,11 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.woniu.model.RoletreeKey;
 import com.woniu.service.IRoletreeService;
-
+@Service
 public class RoleTreeServiceImpl implements IRoletreeService {
 
 	@Override

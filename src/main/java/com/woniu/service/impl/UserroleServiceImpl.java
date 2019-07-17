@@ -2,9 +2,11 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.woniu.model.UserroleKey;
 import com.woniu.service.IUserroleService;
-
+@Service
 public class UserroleServiceImpl implements IUserroleService {
 
 	@Override

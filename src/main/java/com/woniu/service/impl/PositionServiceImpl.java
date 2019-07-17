@@ -2,9 +2,11 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.woniu.model.Position;
 import com.woniu.service.IPositionService;
-
+@Service
 public class PositionServiceImpl implements IPositionService {
 
 	@Override

@@ -2,9 +2,11 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.woniu.model.Vehicles;
 import com.woniu.service.IVehiclesService;
-
+@Service
 public class VehiclesServiceImpl implements IVehiclesService {
 
 	@Override

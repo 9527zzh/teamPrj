@@ -2,9 +2,11 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.woniu.model.Ststatus;
 import com.woniu.service.IStstatusService;
-
+@Service
 public class StstatusServiceImpl implements IStstatusService {
 
 	@Override

@@ -2,9 +2,11 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.woniu.model.Tree;
 import com.woniu.service.ITreeService;
-
+@Service
 public class TreeServiceImpl implements ITreeService {
 
 	@Override

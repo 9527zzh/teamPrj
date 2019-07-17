@@ -10,4 +10,6 @@ public interface ICoordinateService {
 	void update(Coordinate coordinate);
 	Coordinate findOne(Integer cooid);
 	List<Coordinate>  findAll();
+	
+	List<Coordinate> getCooid();//临时测试 建立的接口
 }

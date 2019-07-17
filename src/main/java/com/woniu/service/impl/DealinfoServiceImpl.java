@@ -2,9 +2,12 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.woniu.model.Dealinfo;
 import com.woniu.service.IDealinfoService;
 
+@Service
 public class DealinfoServiceImpl implements IDealinfoService {
 
 	@Override
