@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+   <classPathEntry location="D:\maven\apache-maven-3.6.1\maven-repository\mysql\mysql-connector-java\5.1.35\mysql-connector-java-5.1.35.jar"/>	
+  <context id="context1" >
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/teamprj" userId="root" password="" />
+    <javaModelGenerator targetPackage="com.woniu.model" targetProject="teamprj" ></javaModelGenerator>
+    <sqlMapGenerator targetPackage="com.woniu.mapper" targetProject="teamprj" ></sqlMapGenerator>
+    <javaClientGenerator targetPackage="com.woniu.mapper" targetProject="teamprj" type="XMLMAPPER" />
+    <table schema="" tableName="coordinate" ></table>
+    <table schema="" tableName="dealinfo" ></table>
+    <table schema="" tableName="dept" ></table>
+    <table schema="" tableName="position" ></table>
+    <table schema="" tableName="role" ></table>
+    <table schema="" tableName="roletree" ></table>
+    <table schema="" tableName="rtype" ></table>
+    <table schema="" tableName="sistatus" ></table>
+    <table schema="" tableName="site" ></table>
+    <table schema="" tableName="station" ></table>
+    <table schema="" tableName="ststatus" ></table>
+    <table schema="" tableName="tree" ></table>
+    <table schema="" tableName="user" ></table>
+    <table schema="" tableName="userrole" ></table>
+    <table schema="" tableName="vehicles" ></table>
+    <table schema="" tableName="vrecord" ></table>
+  </context>
+</generatorConfiguration>
