@@ -45,10 +45,14 @@ hs_err_pid *
 *.tar.gz
 *.rar
 
+＃编译的类文件
 *.class
 
+＃日志文件
 *.log
 
+＃ BlueJ的文件
 *.ctxt
 
+#Java移动工具（J2ME）
 .mtj.tmp /
