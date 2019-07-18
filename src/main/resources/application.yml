@@ -1,0 +1,22 @@
+server:
+  port: 9000
+  
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.9.174:3306/teamprj?serverTimezone=Asia/Shanghai
+    username: root
+    password: 
+    
+  mvc:
+    view:
+      prefix: /
+      suffix: .jsp
+      
+logging:
+  level:
+    com: 
+      woniu: 
+        mapper: DEBUG    
+        
+      

@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -48,6 +49,8 @@ public class WeShiro {
 		DefaultWebSecurityManager securityManager=new DefaultWebSecurityManager();
 //		@Qualifier("shiroRealm") ShiroRealm shiroRealm，可以直接securityManager.setRealm(shiroRealm);
 		securityManager.setRealm(getRealm());
+//		注册（添加）缓存管理器
+		securityManager.setCacheManager(getehCacheManager());
 		return securityManager;
 	}
 	//配置自定义的权限登录器（realm）
@@ -55,6 +58,14 @@ public class WeShiro {
 	public WeRealm getRealm() {
 		WeRealm weRealm=new WeRealm();
 		weRealm.setCredentialsMatcher(hashed());
+//		开启缓存
+		weRealm.setCachingEnabled(true);
+//		配置认证缓存
+		weRealm.setAuthenticationCachingEnabled(true);
+		weRealm.setAuthenticationCacheName("authenticationCache");
+//		配置授权缓存
+		weRealm.setAuthorizationCachingEnabled(true);
+		weRealm.setAuthorizationCacheName("authorizationCache");
 		return weRealm;
 	}
 	//配置自定义的密码比较器
@@ -92,6 +103,14 @@ public class WeShiro {
 				new AuthorizationAttributeSourceAdvisor();
 		authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
 		return authorizationAttributeSourceAdvisor;
+	}
+//	定义缓存管理器
+	@Bean
+	public EhCacheManager getehCacheManager() {
+		EhCacheManager ehCacheManager=new EhCacheManager();
+		ehCacheManager.setCacheManagerConfigFile("classpath:ehcache-shiro.xml");
+		return null;
+		
 	}
 
 }
