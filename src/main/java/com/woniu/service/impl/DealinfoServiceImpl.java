@@ -2,14 +2,18 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
+import com.woniu.mapper.DealinfoMapper;
 import com.woniu.model.Dealinfo;
 import com.woniu.service.IDealinfoService;
 
 @Service
 public class DealinfoServiceImpl implements IDealinfoService {
-
+	@Resource
+	DealinfoMapper dealinfoMapper;
 	@Override
 	public void add(Dealinfo dealinfo) {
 		// TODO Auto-generated method stub
@@ -30,8 +34,7 @@ public class DealinfoServiceImpl implements IDealinfoService {
 
 	@Override
 	public Dealinfo findOne(Integer infoid) {
-		// TODO Auto-generated method stub
-		return null;
+		return dealinfoMapper.selectByPrimaryKey(infoid);
 	}
 
 	@Override
