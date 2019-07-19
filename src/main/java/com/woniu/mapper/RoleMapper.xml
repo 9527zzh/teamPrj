@@ -11,6 +11,10 @@
     <result column="rname" property="rname" jdbcType="VARCHAR" />
     <result column="des" property="des" jdbcType="VARCHAR" />
   </resultMap>
+  <select id="selectByUid" resultMap="BaseResultMap">
+  	select * from role WHERE rid in
+	(SELECT rid from userrole where uid=#{uid})
+  </select>
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated

@@ -1,5 +1,7 @@
 package com.woniu.redis;
 
+import java.util.HashMap;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -16,6 +18,7 @@ public class ApplicationContextHolder implements ApplicationContextAware{
 	}
 	public static Object getBean(String name) {
 		return app.getBean(name);
+		
 	}
 	
 }

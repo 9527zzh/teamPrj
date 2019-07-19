@@ -16,6 +16,12 @@
     <result column="salary" property="salary" jdbcType="DOUBLE" />
     <result column="del" property="del" jdbcType="BIT" />
   </resultMap>
+  <resultMap type="com.woniu.model.User" id="rm" extends="BaseResultMap">
+  	<collection property="roles" select="com.woniu.mapper.RoleMapper.selectByUid" column="uid"></collection>
+  </resultMap>
+  <select id="selectByUnum" resultMap="rm">
+  	SELECT * from `user` WHERE unum=#{unum}
+  </select>
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated

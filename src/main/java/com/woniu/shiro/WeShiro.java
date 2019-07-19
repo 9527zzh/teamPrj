@@ -36,7 +36,7 @@ public class WeShiro {
         filterChainMap.put("/hello", "authc");
      // 以“/user/admin” 开头的用户需要身份认证
         filterChainMap.put("/user/admin*", "authc");
-        filterChainMap.put("/hello.html", "roles[admin]");
+        filterChainMap.put("/hello.html", "roles[boss]");
 //        filterChainMap.put("/user/teacher*/**", "perms[\"user:create\"]");
         // 配置 logout 过滤器
         filterChainMap.put("/logout", "logout");
@@ -109,7 +109,7 @@ public class WeShiro {
 	public EhCacheManager getehCacheManager() {
 		EhCacheManager ehCacheManager=new EhCacheManager();
 		ehCacheManager.setCacheManagerConfigFile("classpath:ehcache-shiro.xml");
-		return null;
+		return ehCacheManager;
 		
 	}
 
