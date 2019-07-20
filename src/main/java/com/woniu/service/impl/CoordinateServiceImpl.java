@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.woniu.mapper.CoordinateMapper;
 import com.woniu.model.Coordinate;
+import com.woniu.model.CoordinateExample;
 import com.woniu.service.ICoordinateService;
 @Service
 public class CoordinateServiceImpl implements ICoordinateService {
@@ -52,5 +53,16 @@ CoordinateMapper coordinateMapper;
 		List<Coordinate> Coordinates = coordinateMapper.selectByExample(null);
 		return Coordinates;
 	}
+
+	/**
+ * 根据经纬度找到坐标对象
+ */
+@Override
+public Coordinate findCooByLaAndLo(Coordinate coordinate) {
+ CoordinateExample coordinateExample = new	CoordinateExample();
+ coordinateExample.or().andCooidEqualTo(coordinate.getCooid());
+ List<Coordinate> coordinates = coordinateMapper.selectByExample(coordinateExample);	
+ return coordinates==null?null:coordinates.get(0);
+}
 
 }

@@ -16,6 +16,7 @@
     <result column="salary" property="salary" jdbcType="DOUBLE" />
     <result column="del" property="del" jdbcType="BIT" />
   </resultMap>
+  
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated

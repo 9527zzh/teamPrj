@@ -13,6 +13,7 @@ body {
 	margin: 0px;
 	padding: 0px
 }
+
 #container {
 	height: 100%;
 	background-color: black
@@ -29,13 +30,16 @@ body {
 <script type="text/javascript"
 	src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<!-- vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 
 <body>
-    <!-- 创建一个地图容器 -->
+	<!-- 创建一个地图容器 -->
 	<div id="container"></div>
 
 	<script type="text/javascript">
+	
 		var map = new BMap.Map("container"); // 创建地图实例  
 		map.enableScrollWheelZoom(true); //开启滑轮功能
 		var point = new BMap.Point(113.912690161, 35.3072575577); // 创建初始点点坐标 (新乡的坐标) 
@@ -56,41 +60,137 @@ body {
 		//创建点击弹出的信息框
 		var opts = {
 			width : 250, // 信息窗口宽度    
-			height : 100, // 信息窗口高度    
-			title : "Hello" // 信息窗口标题   
+			height : 200, // 信息窗口高度    
+			title : "垃圾站信息" // 信息窗口标题   
 		}
-		var infoWindow = new BMap.InfoWindow("<a href='1.jsp'>点我啊</a>", opts); // 创建信息窗口对象    
-
+		
+		var infoWindow//提高infoWindow的作用域  让下面方法可以调用方法
+		//想法是做一个模板页面 根据不同的点查不同的内容 展示到模板页面上
+			var html="";
+		function coo(coo){
+			var coo = JSON.stringify({cooid:coo})
+			console.info(coo)
+			$.ajax({
+				url:"../stations",
+				type:"POST",
+				contentType:"application/json",
+				data:coo,
+				async:false,
+				success:function(stationInfo){
+					console.log(stationInfo);
+					html = "<div id='app' class='modal' style='height: 120px;width:280px'>" +
+				    "<div class='title'><p>"+stationInfo.sname+"</p></div>" +
+				    "<a href=''><span class='xq'>详情</span></a>"+
+				    "<div><table>\n" +
+				    "   <tr><td>位置："+stationInfo.position.district+","+stationInfo.position.street+"</td></tr>"+
+				    "   <tr><td>站长："+stationInfo.user.uname+"</td></tr>"+
+				    "</table></div></div>";
+				}
+			})
+		}
 		function open(loc) {
+			 infoWindow = new BMap.InfoWindow(html, opts); // 创建信息窗口对象    
 			map.openInfoWindow(infoWindow, loc); // 打开信息窗口 
 		}
 	</script>
 	<script type="text/javascript">
-	$(function(){
-		start();
-	})
-	
-	function start(){
-		$.ajax({
-			type:"GET",
-			url:"../stations",
-			success:function(msg){
-				for (var i = 0; i < msg.length; i++) {
-					pt = new BMap.Point(msg[i].longitude, msg[i].latitude);
-					var marker = new BMap.Marker(pt)
-					marker.addEventListener("click", function(e) {
-						console.log(e.point)
-						open(e.point);
+	var temp;	
+	$(function() {
+			start();
+			car();
+		})
+		function start() {
+			$.ajax({
+				type : "GET",
+				url : "../stations",
+				success : function(msg) {
+					temp = msg;
+					for (var i = 0; i < msg.length; i++) {
+						var j = i;//提高i的作用域
+						console.log(j)
+						pt = new BMap.Point(msg[i].longitude, msg[i].latitude);
+						var marker = new BMap.Marker(pt)
+						marker.addEventListener("click", function(e) {
+							console.log(e.point)
+							//coo(msg[j].cooid)
+							open(e.point);
+						});
+						markers.push(marker);
+					}
+					/* 将数组内坐标进行展示 */
+					var markerClusterer = new BMapLib.MarkerClusterer(map, {
+						markers : markers
 					});
-					markers.push(marker);
 				}
-				/* 将数组内坐标进行展示 */
-				var markerClusterer = new BMapLib.MarkerClusterer(map, {
-					markers : markers
+			})
+		}
+	</script>
+	<script type="text/javascript">
+	//车辆移动方法	
+	function car() {
+			var myIcon = new BMap.Icon("../img/car.png", new BMap.Size(32, 70),
+					{ //小车图片
+						//offset: new BMap.Size(0, -5),    //相当于CSS精灵
+						imageOffset : new BMap.Size(0, 0)
+					//图片的偏移量。为了是图片底部中心对准坐标点。
+					});
+			for (var i = 0; i < 20; i++) {
+				var myP1 = new BMap.Point(109.069563 + i/100000, 34.34848); //起点
+				var myP2 = new BMap.Point(108.93503 + i/100000, 34.332868); //终点
+				var driving2 = new BMap.DrivingRoute(map, {
+					renderOptions : {
+						map : map,
+						autoViewport : true
+					}
+				}); //驾车实例
+			//	driving2.search(myP1, myP2); //显示一条公交线路
+				carRun();
+			}
+
+			function carRun() {
+				var driving = new BMap.DrivingRoute(map); //驾车实例
+				driving.search(myP1, myP2);//在两点之间运动轨迹
+				driving.setSearchCompleteCallback(function() {
+					var pts = driving.getResults().getPlan(0).getRoute(0)
+							.getPath(); //通过驾车实例，获得一系列点的数组
+					//var pts = [{lng: 109.069563, lat: 34.34848},{lng: 108.93504, lat:34.332868}]
+					//模拟从数据库读出一系列车的点集合 展示车的轨迹
+					/* var pts = [];
+					for(var i=0;i<500;i++){
+						var pt = JSON.stringify({lng:109.069563+i*0.1,lat:34.34848+i*0.1})
+						pts[i] = JSON.parse(pt);
+					}  */
+					//	console.info(pts);
+					var paths = pts.length; //获得有几个点
+					var carMk = new BMap.Marker(pts[0], {
+						icon : myIcon
+					});
+					map.addOverlay(carMk);
+					i = 0;
+					function resetMkPoint(i) {
+						carMk.setPosition(pts[i]);
+						if (i < paths) {
+							setTimeout(function() {
+								i++;
+								resetMkPoint(i);
+							}, 100);
+						}
+					}
+					setTimeout(function() {
+						resetMkPoint(5);
+					}, 100)
+
 				});
 			}
-		})
-	}
+		}
+	</script>
+	<script type="text/javascript">
+	var app = new Vue({
+		 el: '#app',
+		  data: {
+				mess:'aaa',
+		  }
+	})
 	</script>
 </body>
 </html>

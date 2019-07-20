@@ -4,16 +4,16 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.woniu.model.Coordinate;
+import com.woniu.model.Station;
 import com.woniu.service.ICoordinateService;
+import com.woniu.service.IStationService;
 
 @RestController
 @RequestMapping("stations")
@@ -21,7 +21,8 @@ public class StationAction {
 	@Resource
 	ICoordinateService CoordinateServiceImpl;
 	
-	
+	@Resource
+	IStationService StationServiceImpl;
 	/**
 	 * 测试方法 测试ICoordinateService 接口 获取坐标集合点
 	 * @return  返回list集合，包装利用RestController包装成json 发送给前台页面
@@ -30,24 +31,18 @@ public class StationAction {
 	public List<Coordinate> getCooid() {
 		List<Coordinate> Coordinates = CoordinateServiceImpl.getCooid();
 	//	System.out.println(Coordinates.get(0).getLatitude()+"--------"+Coordinates.get(0).getLongitude());
+		System.out.println(Coordinates+"~~~~");
 		return Coordinates;
+		
 	}
-	@RequestMapping("login")
-//	@RequiresRoles(value = {"admin"})
-	public String login(String unum,String upwd) {
-		System.out.println("开启认证。。");
-		Subject currentSubject=SecurityUtils.getSubject();
-		if (!currentSubject.isAuthenticated()) {
-			UsernamePasswordToken token=new UsernamePasswordToken(unum,upwd);
-			try {
-				currentSubject.login(token);
-				return "hello.html";
-			} catch (Exception e) {
-				System.out.println("认证失败。。。");
-				return "error";
-			}
-		}
-		System.out.println("没有进行认证");
-		return null;
+	
+	/**
+	 * 根据站点的坐标点 调用查询出站点当前信息
+	 */
+	@PostMapping
+	public Station getStationInfo(@RequestBody Coordinate coordinate) {
+		System.out.println(coordinate.getCooid()+"!!!!!!!!!!");
+		Station station = StationServiceImpl.findByCoo(coordinate.getCooid());
+		return station;
 	}
 }
