@@ -14,10 +14,14 @@
     <result column="sname" property="sname" jdbcType="VARCHAR" />
     <result column="del" property="del" jdbcType="BIT" />
   </resultMap>
-  
+  <!-- 传入坐标id 找到相应站点 根据uid 找到站长  根据pid找到垃圾站位置 -->
   <resultMap  id="findStationByCoo" type="com.woniu.model.Station" extends="BaseResultMap">
   <association property="user" column="uid" select="com.woniu.mapper.UserMapper.selectByPrimaryKey"></association>
   <association property="position" column="pid" select="com.woniu.mapper.PositionMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  <!-- 查找所有的站点 根据cooid 查到所有站点坐标 显示在地图上 -->
+   <resultMap  id="findAllStations" type="com.woniu.model.Station" extends="BaseResultMap">
+   <association property="coordinate" column="cooid" select="com.woniu.mapper.CoordinateMapper.selectByPrimaryKey"></association>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <!--
@@ -307,4 +311,9 @@
   <select id="findStationByCoo" resultMap="findStationByCoo">
   select * from station where cooid = #{cooid}
   </select>
+  
+  <select id="findAllStations" resultMap="findAllStations">
+  select * from station 
+  </select>
+  
 </mapper>

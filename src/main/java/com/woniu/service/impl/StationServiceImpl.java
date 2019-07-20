@@ -51,5 +51,11 @@ public class StationServiceImpl implements IStationService {
 		return stations;
 	}
 
+	@Override
+	public List<Station> findAllStations() {
+		List<Station> stations = stationMapper.findAllStations();
+		return stations;
+	}
+
 	
 }

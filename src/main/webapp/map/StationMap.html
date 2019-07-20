@@ -59,6 +59,7 @@ body {
 		var pt = null;
 		//创建点击弹出的信息框
 		var opts = {
+			message:"123",
 			width : 250, // 信息窗口宽度    
 			height : 200, // 信息窗口高度    
 			title : "垃圾站信息" // 信息窗口标题   
@@ -106,16 +107,18 @@ body {
 				success : function(msg) {
 					temp = msg;
 					for (var i = 0; i < msg.length; i++) {
-						var j = i;//提高i的作用域
-						console.log(j)
-						pt = new BMap.Point(msg[i].longitude, msg[i].latitude);
+						pt = new BMap.Point(msg[i].coordinate.longitude, msg[i].coordinate.latitude);
 						var marker = new BMap.Marker(pt)
-						marker.addEventListener("click", function(e) {
-							console.log(e.point)
-							//coo(msg[j].cooid)
-							open(e.point);
-						});
 						markers.push(marker);
+					}
+					for (i =0; i<markers.length; i ++) {
+					    (function(){
+					        var index = i;
+					        markers[i].addEventListener('click', function(e){
+					    		coo(msg[index].coordinate.cooid)
+					    		open(e.point);
+					        });    
+					    })();
 					}
 					/* 将数组内坐标进行展示 */
 					var markerClusterer = new BMapLib.MarkerClusterer(map, {
@@ -124,6 +127,7 @@ body {
 				}
 			})
 		}
+
 	</script>
 	<script type="text/javascript">
 	//车辆移动方法	
