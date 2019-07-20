@@ -17,8 +17,8 @@ public class DealinfoAction {
 	IDealinfoService dealinfoServiceImpl;
 	
 	@PostMapping
-	public Dealinfo getDealinfoById(HttpServletRequest request) {
-		int id = Integer.parseInt(request.getParameter("id"));
+	public Dealinfo getDealinfoById(Integer id ,HttpServletRequest request) {
+		
 		return dealinfoServiceImpl.findOne(id);
 	}
 }

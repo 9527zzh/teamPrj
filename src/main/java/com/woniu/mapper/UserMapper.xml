@@ -22,6 +22,7 @@
   <select id="selectByUnum" resultMap="rm">
   	SELECT * from `user` WHERE unum=#{unum}
   </select>
+
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated
