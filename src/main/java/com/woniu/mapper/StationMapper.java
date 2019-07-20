@@ -93,4 +93,6 @@ public interface StationMapper {
      * @mbggenerated Wed Jul 17 14:45:57 CST 2019
      */
     int updateByPrimaryKey(Station record);
+    
+    Station findStationByCoo(Integer cooid);//新增方法 通过坐标id查到垃圾站  再通过垃圾站里的uid  查到相应的站长
 }

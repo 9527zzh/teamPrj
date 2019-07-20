@@ -12,4 +12,5 @@ public interface ICoordinateService {
 	List<Coordinate>  findAll();
 	
 	List<Coordinate> getCooid();//临时测试 建立的接口
+	Coordinate findCooByLaAndLo(Coordinate coordinate);//根据经纬度找到一个坐标对象
 }
