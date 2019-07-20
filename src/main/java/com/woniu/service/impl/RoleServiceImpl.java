@@ -2,13 +2,18 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
+import com.woniu.mapper.RoleMapper;
 import com.woniu.model.Role;
 import com.woniu.service.IRoleService;
 @Service
 public class RoleServiceImpl implements IRoleService {
 
+	@Resource
+	RoleMapper roleMApper;
 	@Override
 	public void add(Role role) {
 		// TODO Auto-generated method stub
@@ -35,8 +40,7 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Override
 	public List<Role> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return roleMApper.selectByExample(null);
 	}
 
 }
