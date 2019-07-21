@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"
+	charset="UTF-8">
+<title>数据统计</title>
+<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!-- 此处应注意，必须先导入jquery再导入bootstrap的js -->
+<script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.6.10/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="container">
+<div class="row clearfix">
+	<div class="col-md-12 column">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="navbar-header">
+				 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span>
+					 <span class="icon-bar"></span>
+					 <span class="icon-bar"></span>
+				 </button>
+				 <a class="navbar-brand" href="#">首页</a>
+			</div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="active">
+						 <a href="#">垃圾回收记录</a>
+					</li>
+					<li>
+						 <a href="#">垃圾处理记录</a>
+					</li>
+					<li class="dropdown">
+						 <a href="#" class="dropdown-toggle" data-toggle="dropdown">状态记录统计<strong class="caret"></strong></a>
+						<ul class="dropdown-menu">
+							<li>
+								 <a href="#">垃圾站储量日统计</a>
+							</li>
+							<li>
+								 <a href="#">垃圾站点储量日统计</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" />
+					</div> <button type="submit" class="btn btn-default">查找</button>
+				</form>
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						 <a href="#">导出报表</a>
+					</li>
+					<li class="dropdown">
+						 <a href="#" class="dropdown-toggle" data-toggle="dropdown">图表统计<strong class="caret"></strong></a>
+						<ul class="dropdown-menu">
+							<li>
+								 <a href="#">垃圾站点状态</a>
+							</li>
+							<li>
+								 <a href="#">Another action</a>
+							</li>
+							<li class="divider">
+							</li>
+							<li>
+								 <a href="#">Separated link</a>
+							</li>
+							<li class="divider">
+							</li>
+							<li>
+								 <a href="#">One more separated link</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			
+		</nav>
+	</div>
+</div>
+<div id="show">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>垃圾站点</th>
+				<th>时间</th>
+				<template>
+					<th v-for="type in types">{{type.rtname}}</th>
+				</template>
+			</tr>
+		</thead>
+		<tbody>
+			<template v-for="strecord in strecordList">
+				<tr>
+					<td>{{strecord.sid}}</td>
+					<td>{{strecord.sname}}</td>
+					<td>{{strecord.recordTime}}</td>
+					<template v-for="type in types">
+						<template v-for="st in strecord.strecords">
+							<td v-if="st.rtid == type.rtid">{{st.count}}</td>
+						</template>
+					</template>
+				</tr>
+			</template>
+		</tbody>
+	</table>
+</div>
+</div>
+</body>
+<script>
+var app = new Vue({
+	el: '#show',
+	data() {
+		return{
+			types: null,
+		    strecordList:null
+		};
+	},
+	methods:{
+		showInfo(){
+			axios.post("../rtype/getRtypeList")
+			 .then(function(response){
+				app.types = response.data;
+			 })
+			 .catch(function (error) {
+				console.log(error);
+			 });
+			axios.post("../data/getStrecordList")
+				 .then(function(response){
+					 app.strecordList = response.data;
+				 })
+				 .catch(function (error) {
+					console.log(error);
+				 });
+		}
+	},
+	created() {
+		this.showInfo();
+	}
+})
+</script>
+</html>
