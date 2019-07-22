@@ -2,13 +2,18 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
+import com.woniu.mapper.RtypeMapper;
 import com.woniu.model.Rtype;
 import com.woniu.service.IRtypeService;
 @Service
 public class RtypeServiceImpl implements IRtypeService {
 
+	@Resource
+	RtypeMapper rtypeMapper;
 	@Override
 	public void add(Rtype rtype) {
 		// TODO Auto-generated method stub
@@ -35,8 +40,7 @@ public class RtypeServiceImpl implements IRtypeService {
 
 	@Override
 	public List<Rtype> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return rtypeMapper.selectByExample(null);
 	}
 
 	
