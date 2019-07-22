@@ -2,6 +2,7 @@ package com.woniu.service;
 
 import java.util.List;
 
+import com.woniu.model.PageBean;
 import com.woniu.model.Role;
 
 public interface IRoleService {
@@ -9,5 +10,5 @@ public interface IRoleService {
 	void delete(Integer rid);
 	void update(Role role);
 	Role findOne(Integer rid);
-	List<Role>  findAll();
+	List<Role>  findAll(PageBean page);
 }

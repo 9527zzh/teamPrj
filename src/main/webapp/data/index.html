@@ -23,22 +23,50 @@
                 data: ['ios', 'android']
             },
             tooltip: {                                  // 气泡提示配置
-                trigger: 'item',                        // 触发类型，默认数据触发，可选为：'axis'
+                trigger: 'axis',                        // 触发类型，默认数据触发，可选为：'axis'
+                axisPointer: {                          // 跟随鼠标交叉轴显示
+                    type: 'cross'
+                },
+                backgroundColor: 'rgba(245, 245, 245, 0.8)', //显示框的背景颜色
+                borderWidth: 1,                              //显示框的边框
+                borderColor: '#ccc',                         //显示框的颜色
+                padding: 10,                                   
+                textStyle: {                                 //文本颜色
+                    color: '#000'
+                },
+                extraCssText: 'width: 170px'                 //扩充文本框大小
             },
+         
             xAxis: [                                    // 直角坐标系中横轴数组
                 {
                     type: 'category',                   // 坐标轴类型，横轴默认为类目轴，数值轴则参考yAxis说明
-                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    // scale: true,
+                    // boundaryGap : false,
+                    axisLine: {onZero: false},
+                    splitLine: {show: false},
+                    splitNumber: 20,
+                    min: 'dataMin',
+                    max: 'dataMax',
+                    axisPointer: {
+                        z: 100,
+                        type:'line'
+                    }
                 }
             ],
             yAxis: [                                    // 直角坐标系中纵轴数组
                 {
                     type: 'value',                      // 坐标轴类型，纵轴默认为数值轴，类目轴则参考xAxis说明
-                    boundaryGap: [0.1, 0.1],            // 坐标轴两端空白策略，数组内数值代表百分比
-                    splitNumber: 4                      // 数值轴用，分割段数，默认为5
-                }
+                    boundaryGap: [0,0.1],            // 坐标轴两端空白策略，数组内数值代表百分比
+                    splitNumber: 5,                      // 数值轴用，分割段数，默认为5
+                    scale: true,
+                    axisLabel: {show: true},
+                    axisLine: {show: true},
+                    axisTick: {show: true},
+                    splitLine: {show: true}
+                    }
             ],
-            series: [
+            series: [    //绘制图线的类型
                 {
                     name: 'ios',                        // 系列名称
                     type: 'line',                       // 图表类型，折线图line、散点图scatter、柱状图bar、饼图pie、雷达图radar
@@ -49,7 +77,40 @@
                     type: 'line',                       // 图表类型，折线图line、散点图scatter、柱状图bar、饼图pie、雷达图radar
                     data: [45, 123, 145, 526, 233, 343, 44, 829, 33, 123, 45, 13]
                 }
-            ]
+            ],
+            toolbox: {   //右上角显示工具
+                show : true,
+                feature : {
+                    mark : {show: true},    //显示工具,决定下面的图形是否展示
+                    dataZoom : {show: true},  //区域放大
+                  
+                    dataView : {show: true}, //数据视图
+                    magicType : {show: true, type: ['line','bar','pie']},//类型切换
+                    restore : {show: true},  //还原
+                    saveAsImage : {show: true}  //下载图片
+                }
+            },
+              dataZoom : {              //区域放大框
+                show : true,
+                realtime : true,
+                // orient: 'vertical',   // 'horizontal'
+                // x: 0,
+                y: 36,
+                // width: 400,
+                height: 20,
+                // backgroundColor: 'rgba(221,160,221,0.5)',
+                dataBackgroundColor: 'rgba(138,43,226,0.5)',
+                // fillerColor: 'rgba(38,143,26,0.6)',
+                // handleColor: 'rgba(128,43,16,0.8)',
+                // xAxisIndex:[],
+                //yAxisIndex:[],
+                start : 0,
+                end : 100
+            },
+            animationEasing: 'elasticOut',
+            animationDelayUpdate: function (idx) {
+                return idx * 5;
+            }
         };
         myChart.setOption(option);
 

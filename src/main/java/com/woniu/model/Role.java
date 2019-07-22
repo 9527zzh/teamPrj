@@ -96,4 +96,9 @@ public class Role {
     public void setDes(String des) {
         this.des = des;
     }
+
+	@Override
+	public String toString() {
+		return "Role [rid=" + rid + ", rname=" + rname + ", des=" + des + "]";
+	}
 }

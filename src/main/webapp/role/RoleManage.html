@@ -5,35 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"
 	charset="UTF-8">
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
-<script>
-	$(function() {
-		$.post("../roles/lll",{},function(roles, status) {
-			var databody = $("#databody");
-			$.each(roles,function(index, role) {
-				var tr = $("<tr></tr>");
-				tr.append($("<td>" + role.rid+ "</td>"));
-				tr.append($("<td>" + role.rname+ "</td>"));
-				tr.append($("<td>" + role.des+ "</td>"));
-				tr.append($("<td><button type='button' class='btn btn-sm btn-default'>编辑</button></td>"));
-				tr.append($("<td><button type='button' class='btn btn-sm btn-default'>删除</button></td>"));
-				databody.append(tr);
-			});
-		});
-	});
-</script>
-<link
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-	rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
+    <div id="app">
 	<div class="container">
 		<div class="row clearfix">
 			<div class="col-md-12 column">
 				<div class="row clearfix">
-					<button type="button" class="btn btn-sm btn-default">添加角色</button>
-					<button type="button" class="btn btn-sm btn-primary">批量删除</button>
-					<button type="button" class="btn btn-sm btn-default">全选/全不选</button>
-					<button type="button" class="btn btn-sm btn-default">反选</button>
+					<button type="button" class="btn btn-sm btn-default" @click="save()">添加角色</button>
+					<button type="button" class="btn btn-sm btn-primary" @click="del()">批量删除</button>
+					<button type="button" class="btn btn-sm btn-default" @click="all1()">全选/全不选</button>
+					<button type="button" class="btn btn-sm btn-default" @click="inverse()">反选</button>
 				</div>
 				<div class="row clearfix">
 					<div class="col-md-12 column">
@@ -41,18 +28,203 @@
 							<caption>角色</caption>
 							<thead>
 								<tr>
+                                    <th>   </th>
 									<th>序号</th>
 									<th>角色</th>
 									<th>描述</th>
 									<th colspan="2">操作</th>
 								</tr>
 							</thead>
-							<tbody id="databody"></tbody>
+							<tbody id="databody">
+                                <tr v-for="l in list">
+                                    <td>
+                                            <input type="checkbox" aria-label="选中" :value="l.rid" @click="check()">
+                                    </td>
+                                    <td>{{l.rid}}</td>
+                                    <td>{{l.rname}}</td>
+                                    <td>{{l.des}}</td>
+                                    <td>
+                                        <button class="btn btn-default">
+                                            <span class="glyphicon glyphicon-pencil" style="color: rgb(30, 107, 195);font-size: 15px;" @click="edit(l.rid,l.rname,l.des)"> 编辑</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
 						</table>
 					</div>
 				</div>
 			</div>
 		</div>
+        <!-- 按钮触发模态框 -->
+           
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                修改角色信息
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                
+                              <div class="form-group">
+                                <label for="rname">角色名</label>
+                                <input type="text" class="form-control" id="rname" placeholder="角色名" v-model="rname">
+                              </div>
+                              <div class="form-group">
+                                <label for="rdes">角色描述</label>
+                                <input type="text" class="form-control" id="rdes" placeholder="角色描述" v-model="rdes">
+                              </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                            </button>
+                            <button type="button" class="btn btn-primary" id="sub" @click="action()">
+                                
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+                <nav aria-label="Page navigation">
+                  <ul class="pager">
+                     <li><a href="#">首页</a></li>
+                     <li>
+                      <span>
+                        <span aria-hidden="true">&laquo;</span>
+                      </span>
+                    </li>
+                    <li>
+                        <select>
+                            <template v-for="count in 'pagecount'"></template>
+                            <option value ="count"></option>
+                            </template>
+                        </select>
+                    </li>
+                    <li>
+                        <span aria-hidden="true">&raquo;</span>
+                    </li>
+                    <li><a href="#">尾页</a></li>
+                    共{{pagecount}}页
+                  </ul>
+                </nav>
 	</div>
+    
+    </div>
 </body>
+<script>
+    Vue.http.options.emulateJSON=true;
+    var flag=true;
+    var vm=new Vue({
+        el:'#app',
+        data:{
+            list:'',
+            page:'',
+            checked:'',
+            rname:'',
+            rdes:'',
+            rid:'',
+            pageNow:'1',
+            pagecount:0,
+        },
+        mounted:function(){
+            this.show();//需要触发的函数
+		},
+        methods:{
+            show:function(){
+                this.$http.get('../roles',{params:{pageNow:this.pageNow}}).then(function(res){
+                    this.list=res.body.list;
+                    console.info(res.body)
+                    this.pagecount=parseInt(res.body.page.pagecount);
+                },function(res){
+                    console.log(res.status);
+                });
+            },
+            check:function(){
+                this.checked='1';
+               $("input[type='checkbox']").each(function(){
+                   var kids=$(this).val();
+                   if($(this).prop("checked")){
+                       vm.checked=vm.checked+","+kids;
+                   }
+               });
+            },
+            all1:function(){
+                $("input[type=checkbox]").each(function(){
+                    if(flag){
+                        $(this).prop("checked",true)
+                    }else{
+                         $(this).prop("checked",false)
+                    }
+                });
+                if(flag){
+                    flag=false;
+                }else{
+                    flag=true;
+                };
+            },
+            inverse:function(){
+                 $("input[type=checkbox]").each(function(){
+                     if($(this).prop("checked")){
+                         $(this).prop("checked",false);
+                     }else{
+                          $(this).prop("checked",true);
+                     }
+                 });
+            },
+            del:function(){
+                $.ajax
+                this.check();
+                this.$http.delete('../roles',{
+                    params:{checked:this.checked},
+                    }).then(function(res){
+                        vm.show();
+                },function(res){
+                    console.log(res.status);
+                });
+            },
+            edit:function(rid,rname,rdes){
+                    this.rid=rid;
+                    this.rname=rname;
+                    this.rdes=rdes;
+                    $("#sub").html("修改");
+                    $("#myModal").modal('show');  //手动开启
+            },
+            save:function(){
+                this.rname='';
+                this.rdes='';
+                $("#sub").html("保存");
+                $("#myModal").modal('show');  //手动开启
+            },
+            action:function(str){
+                if(this.rname!=''&&this.rdes!=''){
+                    if( $("#sub").html()=="保存"){
+                        this.$http.post('../roles',{rname:this.rname,des:this.rdes}).then(function(res){
+                            this.list=res.body;
+                            console.info(this.list);
+                        },function(res){
+                            console.log(res.status);
+                        });
+                    }else{
+                         this.$http.put('../roles',{rid:this.rid,rname:this.rname,des:this.rdes}).then(function(res){
+                            this.list=res.body;
+                            console.info(this.list);
+                        },function(res){
+                            console.log(res.status);
+                        });
+                    }
+                }
+                this.show();
+                 $("#myModal").modal('hide');  //手动开启
+            }
+        }
+        
+    });
+</script>
 </html>
