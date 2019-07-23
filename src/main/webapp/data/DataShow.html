@@ -86,7 +86,6 @@
 							<li>
 								 <a href="#">垃圾回收数据图</a>
 							</li>
-							<li class="divider"></li>
 							<li>
 								 <a href="#">垃圾处理数据图</a>
 							</li>
@@ -218,7 +217,8 @@ var vrecordVue = new Vue({
 	el: '#vrecord',
 	data() {
 		return{
-		    vrecordList:null
+		    vrecordList:null,
+			pageNow:1
 		};
 	},
 	methods:{
@@ -229,7 +229,7 @@ var vrecordVue = new Vue({
 			$().hide();
 			$("#subtitle").text("垃圾回收记录");
 			$("#vrecord").show();
-			axios.post("../data/getVrecordList")
+			axios.post("../data/getVrecordList",{pageNow:this.pageNow})
 			.then(function(response){
 					 vrecordVue.vrecordList = response.data;
 			})

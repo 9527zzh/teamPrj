@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.woniu.model.Dealinfo;
+import com.woniu.model.PageBean;
 import com.woniu.model.Vrecord;
 import com.woniu.service.IDealinfoService;
 import com.woniu.service.ISirecordService;
@@ -36,8 +37,8 @@ public class DataAction {
 		return sirecordServiceImpl.findAllBySite();
 	}
 	@PostMapping("getVrecordList")
-	public List<Vrecord> getVrecordList() {
-		return vrecordServiceImpl.findAllVrecordDetails();
+	public List<Vrecord> getVrecordList(PageBean pb) {
+		return vrecordServiceImpl.findAllVrecordDetails(pb);
 	}
 	@PostMapping("getDealinfoList")
 	public List<Dealinfo> getDealinfoList() {
