@@ -15,6 +15,14 @@
     <result column="date" property="date" jdbcType="DATE" />
     <result column="count" property="count" jdbcType="INTEGER" />
   </resultMap>
+  <resultMap id="DealinfoDetailInfo" type="com.woniu.model.Dealinfo" extends="BaseResultMap">
+	<!--承运垃圾类型名称 -->
+    <result column="rtname" property="rtname" jdbcType="VARCHAR" />
+    <!--所属站点名称 -->
+    <result column="sname" property="sname" jdbcType="VARCHAR" />
+    <!--负责财务人员姓名 -->
+    <result column="uname" property="uname" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated
@@ -91,6 +99,16 @@
     -->
     infoid, rtid, sid, uid, note, date, count
   </sql>
+  
+  <select id="selectDetailInfo" resultMap="DealinfoDetailInfo">
+  	SELECT infoid ,d.rtid , rtname ,d.sid ,sname ,d.uid ,uname ,date ,count ,note 
+		FROM dealinfo d 
+		LEFT JOIN rtype r ON d.rtid=r.rtid 
+		LEFT JOIN station s ON d.sid=s.sid 
+		LEFT JOIN USER u ON d.uid=u.uid
+		ORDER BY uid;
+  </select>
+  
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.woniu.model.DealinfoExample" >
     <!--
       WARNING - @mbggenerated

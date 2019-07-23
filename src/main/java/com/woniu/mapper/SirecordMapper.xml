@@ -89,6 +89,15 @@
     -->
     sirid, siid, rtid, createtime, count
   </sql>
+  <select id="selectBySite" resultType="java.util.HashMap">
+	SELECT sirid ,sir.siid ,si.`siname` ,createtime ,
+	<if test="rtypes != null">
+		<foreach collection="rtypes" item="rtype" separator=",">
+			 MAX(CASE rtid WHEN #{rtype.rtid} THEN count END ) "${rtype.rtid}" 
+		</foreach>
+	</if>FROM sirecord sir LEFT JOIN site si ON sir.`siid` = si.`siid` 
+		GROUP BY siid, createtime;
+   </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.woniu.model.SirecordExample" >
     <!--
       WARNING - @mbggenerated

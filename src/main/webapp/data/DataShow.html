@@ -10,9 +10,28 @@
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
 <script src="https://cdn.staticfile.org/vue/2.6.10/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+	$(function(){
+		$(".container li").click(function(e){
+			$(".container .active").attr("class","");
+			if($(this).attr("class")!="dropdown open" && $(this).attr("id")!="export"){
+				$(this).attr("class","active");
+			}
+		});
+	});
+</script>
 </head>
 <body>
 <div class="container">
+<div class="row clearfix">
+	<div class="col-md-12 column">
+		<div class="page-header">
+			<h1>
+				垃圾回收管理系统 <small id="subtitle"></small>
+			</h1>
+		</div>
+	</div>
+</div>
 <div class="row clearfix">
 	<div class="col-md-12 column">
 		<nav class="navbar navbar-default" role="navigation">
@@ -27,19 +46,20 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li class="active">
-						 <a href="#">垃圾回收记录</a>
+						 <a href="javascript:vrecordVue.showInfo();">垃圾回收记录</a>
 					</li>
 					<li>
-						 <a href="#">垃圾处理记录</a>
+						 <a href="javascript:dealinfoVue.showInfo();">垃圾处理记录</a>
 					</li>
+					
 					<li class="dropdown">
 						 <a href="#" class="dropdown-toggle" data-toggle="dropdown">状态记录统计<strong class="caret"></strong></a>
 						<ul class="dropdown-menu">
 							<li>
-								 <a href="#">垃圾站储量日统计</a>
+								 <a href="javascript:strecordVue.showInfo();">垃圾站储量日统计</a>
 							</li>
 							<li>
-								 <a href="#">垃圾站点储量日统计</a>
+								 <a href="javascript:sirecordVue.showInfo();">垃圾投放点储量日统计</a>
 							</li>
 						</ul>
 					</li>
@@ -50,37 +70,94 @@
 					</div> <button type="submit" class="btn btn-default">查找</button>
 				</form>
 				<ul class="nav navbar-nav navbar-right">
-					<li>
+					<li id="export">
 						 <a href="#">导出报表</a>
 					</li>
 					<li class="dropdown">
 						 <a href="#" class="dropdown-toggle" data-toggle="dropdown">图表统计<strong class="caret"></strong></a>
 						<ul class="dropdown-menu">
 							<li>
-								 <a href="#">垃圾站点状态</a>
+								 <a href="#">垃圾站点状态图</a>
 							</li>
 							<li>
-								 <a href="#">Another action</a>
+								 <a href="#">垃圾投放点状态图</a>
 							</li>
-							<li class="divider">
-							</li>
+							<li class="divider"></li>
 							<li>
-								 <a href="#">Separated link</a>
+								 <a href="#">垃圾回收数据图</a>
 							</li>
-							<li class="divider">
-							</li>
+							<li class="divider"></li>
 							<li>
-								 <a href="#">One more separated link</a>
+								 <a href="#">垃圾处理数据图</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 			</div>
-			
 		</nav>
 	</div>
 </div>
-<div id="show">
+<div id="vrecord">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>回收车编号</th>
+				<th>所属站点</th>
+				<th>垃圾类型</th>
+				<th>垃圾回收量</th>
+				<th>出车时间</th>
+				<th>返回时间</th>
+				<th>回收负责人</th>
+				<th>备注</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="(vrecord,index) in vrecordList">
+				<!-- <td>{{vrecord.sirid}}</td> -->
+				<td>{{index+1}}</td>
+				<td>{{vrecord.vid}}</td>
+				<td>{{vrecord.sname}}</td>
+				<td>{{vrecord.rtname}}</td>
+				<td>{{vrecord.count}}</td>
+				<td>{{new Date(vrecord.starttime).Format("yyyy-MM-dd hh:mm:ss")}}</td>
+				<td v-if="vrecord.endtime != null">{{new Date(vrecord.endtime).Format("yyyy-MM-dd hh:mm:ss")}}</td>
+				<td v-else >未完成</td>
+				<td>{{vrecord.uname}}</td>
+				<td>{{vrecord.note}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="dealinfo">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>所属站点</th>
+				<th>垃圾类型</th>
+				<th>垃圾处理量</th>
+				<th>处理时间</th>
+				<th>回收负责人</th>
+				<th>备注</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="(dealinfo,index) in dealinfoList">
+				<!-- <td>{{vrecord.sirid}}</td> -->
+				<td>{{index+1}}</td>
+				<td>{{dealinfo.sname}}</td>
+				<td>{{dealinfo.rtname}}</td>
+				<td>{{dealinfo.count}}</td>
+				<td>{{new Date(dealinfo.date).Format("yyyy-MM-dd ")}}</td>
+				<td v-if="dealinfo.uid != null">{{dealinfo.uname}}</td>
+				<td v-else >未完成</td>
+				<td>{{dealinfo.note}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="strecord">
 	<table class="table table-hover">
 		<thead>
 			<tr>
@@ -93,15 +170,41 @@
 			</tr>
 		</thead>
 		<tbody>
-			<template v-for="strecord in strecordList">
+			<template v-for="(strecord,index) in strecordList">
 				<tr>
-					<td>{{strecord.sid}}</td>
+					<!-- <td>{{strecord.sid}}</td> -->
+					<td>{{index+1}}</td>
 					<td>{{strecord.sname}}</td>
-					<td>{{strecord.recordTime}}</td>
-					<template v-for="type in types">
-						<template v-for="st in strecord.strecords">
-							<td v-if="st.rtid == type.rtid">{{st.count}}</td>
-						</template>
+					<td>{{new Date(strecord.createtime).Format("yyyy-MM-dd hh:mm:ss")}}</td>
+					<template>
+						<td  v-for="type in types">{{strecord[type.rtid]}}</td>
+					</template>
+				</tr>
+			</template>
+		</tbody>
+	</table>
+</div>
+<div id="sirecord">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>垃圾投放点</th>
+				<th>时间</th>
+				<template>
+					<th v-for="type in types">{{type.rtname}}</th>
+				</template>
+			</tr>
+		</thead>
+		<tbody>
+			<template v-for="(sirecord,index) in sirecordList">
+				<tr>
+					<!-- <td>{{sirecord.sirid}}</td> -->
+					<td>{{index+1}}</td>
+					<td>{{sirecord.siname}}</td>
+					<td>{{new Date(sirecord.createtime).Format("yyyy-MM-dd hh:mm:ss")}}</td>
+					<template>
+						<td  v-for="type in types">{{sirecord[type.rtid]}}</td>
 					</template>
 				</tr>
 			</template>
@@ -111,8 +214,65 @@
 </div>
 </body>
 <script>
-var app = new Vue({
-	el: '#show',
+var vrecordVue = new Vue({
+	el: '#vrecord',
+	data() {
+		return{
+		    vrecordList:null
+		};
+	},
+	methods:{
+		showInfo(){
+			$("#sirecord").hide();
+			$("#strecord").hide();
+			$("#dealinfo").hide();
+			$().hide();
+			$("#subtitle").text("垃圾回收记录");
+			$("#vrecord").show();
+			axios.post("../data/getVrecordList")
+			.then(function(response){
+					 vrecordVue.vrecordList = response.data;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		}
+	},
+	created() {
+		this.showInfo();
+	}
+})
+</script>
+<script>
+var dealinfoVue = new Vue({
+	el: '#dealinfo',
+	data() {
+		return{
+		    dealinfoList:null
+		};
+	},
+	methods:{
+		showInfo(){
+			$("#sirecord").hide();
+			$("#strecord").hide();
+			$("#vrecord").hide();
+			$().hide();
+			$("#subtitle").text("垃圾处理记录");
+			$("#dealinfo").show();
+			axios.post("../data/getDealinfoList")
+			.then(function(response){
+					 dealinfoVue.dealinfoList = response.data;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		}
+	}
+})
+</script>
+<script>
+var strecordVue = new Vue({
+	el: '#strecord',
 	data() {
 		return{
 			types: null,
@@ -121,25 +281,66 @@ var app = new Vue({
 	},
 	methods:{
 		showInfo(){
-			axios.post("../rtype/getRtypeList")
-			 .then(function(response){
-				app.types = response.data;
-			 })
-			 .catch(function (error) {
-				console.log(error);
-			 });
+			$("#sirecord").hide();
+			$("#vrecord").hide();
+			$("#dealinfo").hide();
+			$().hide();
+			$("#subtitle").text("垃圾站储量日统计");
+			$("#strecord").show();
 			axios.post("../data/getStrecordList")
+			.then(function(response){
+					 strecordVue.types = response.data.rtypes;
+					 strecordVue.strecordList = response.data.strecord;
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+		}
+	}
+})
+</script>
+<script>
+var sirecordVue = new Vue({
+	el: '#sirecord',
+	data() {
+		return{
+			types: null,
+			sirecordList:null
+		};
+	},
+	methods:{
+		showInfo(){
+			$("#strecord").hide();
+			$("#vrecord").hide();
+			$("#dealinfo").hide();
+			$().hide();
+			$("#subtitle").text("垃圾投放点储量日统计");
+			$("#sirecord").show();
+			axios.post("../data/getSirecordList")
 				 .then(function(response){
-					 app.strecordList = response.data;
+					 sirecordVue.types = response.data.rtypes;
+					 sirecordVue.sirecordList = response.data.sirecord;
 				 })
 				 .catch(function (error) {
 					console.log(error);
 				 });
 		}
-	},
-	created() {
-		this.showInfo();
 	}
-})
+});
+Date.prototype.Format = function (fmt) {  
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
 </script>
 </html>
