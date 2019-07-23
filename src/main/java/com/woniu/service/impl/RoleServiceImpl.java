@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.woniu.mapper.RoleMapper;
 import com.woniu.model.PageBean;
 import com.woniu.model.Role;
+import com.woniu.model.RoleExample;
+import com.woniu.model.RoleExample.Criteria;
 import com.woniu.service.IRoleService;
 @Service
 public class RoleServiceImpl implements IRoleService {
@@ -41,9 +43,18 @@ public class RoleServiceImpl implements IRoleService {
 	}
 
 	@Override
-	public List<Role> findAll(PageBean page) {
-		page.setCount(roleMApper.countByExample(null));
-		return roleMApper.selectByExample(null,new RowBounds(page.getOffset(),page.getLimit()));
+	public List<Role> findAll(PageBean page,Role role) {
+		RoleExample e=new RoleExample();
+		Criteria c=e.or();
+		if (role.getRid()!=null) {
+			c.andRidEqualTo(role.getRid());
+		}
+		if (role.getRname()!=null&&role.getRname().trim()!="") {
+			c.andRnameLike(role.getRname());
+		}
+				
+		page.setCount(roleMApper.countByExample(e));
+		return roleMApper.selectByExample(e,new RowBounds(page.getOffset(),page.getLimit()));
 	}
 
 }

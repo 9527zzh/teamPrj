@@ -2,7 +2,7 @@ package com.woniu.model;
 
 public class PageBean {
 	private Integer offset;
-	private Integer limit=10;
+	private Integer limit=1;
 	private Integer pageNow=1;
 	private Integer count;
 	private Integer pagecount;

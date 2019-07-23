@@ -1,4 +1,4 @@
-package com.woniu.filter;
+package com.woniu.common;
 
 import java.sql.Connection;
 import java.util.Properties;
@@ -18,7 +18,7 @@ import org.apache.ibatis.session.RowBounds;
 
 
 @Intercepts({ @Signature(type = StatementHandler.class,method = "prepare",args = {Connection.class,Integer.class})})
-public class MyIntercepter implements Interceptor{
+public class MyInterceptor implements Interceptor{
 
 	@Override
 	public Object intercept(Invocation arg0) throws Throwable {
@@ -30,11 +30,9 @@ public class MyIntercepter implements Interceptor{
 				RowBounds rb = (RowBounds)metaObject.getValue("delegate.rowBounds");
 				
 				if(rb==null||rb==RowBounds.DEFAULT) {
-					System.out.println("不分页");
 					Object obj = arg0.proceed();//继续执行  放行
 					return obj;
 				}else {
-					System.out.println("分页");
 					
 					//得到原始的SQL语句
 					String orinialSql = (String)metaObject.getValue("delegate.boundSql.sql");

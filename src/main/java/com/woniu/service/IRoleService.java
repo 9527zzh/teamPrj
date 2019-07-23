@@ -10,5 +10,5 @@ public interface IRoleService {
 	void delete(Integer rid);
 	void update(Role role);
 	Role findOne(Integer rid);
-	List<Role>  findAll(PageBean page);
+	List<Role>  findAll(PageBean page,Role role);
 }

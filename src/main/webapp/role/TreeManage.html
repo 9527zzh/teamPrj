@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>RoleManage</title>
+<title>treeManage</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"
 	charset="UTF-8">
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
@@ -16,7 +16,7 @@
 	<div class="container">
         <div class="row clearfix">
 	<div class="col-md-12 column">
-		<nav class="navbar navbar-default" role="navigation">
+		<nav class="navbar navbar-default" tree="navigation">
 			<div class="navbar-header">
 				 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 					 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span>
@@ -26,27 +26,12 @@
 				 <a class="navbar-brand" href="#">首页</a>
 			</div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<!-- <ul class="nav navbar-nav">
-                    
-					<li class="active">
-						 <a href="#" @click="save();return false;">添加角色</a>
-					</li>
-					<li>
-						 <a href="#" @click="del();return false;">批量删除</a>
-					</li>
-                    <li>
-                    	 <a href="#" @click="all1();return false;">全选/全不选</a>
-                    </li>
-                    <li>
-                    	 <a href="#" @click="inverse();return false;">反选</a>
-                    </li>
-				</ul> -->
-				<form class="navbar-form navbar-left" role="search">
+				<form class="navbar-form navbar-left" tree="search">
 					<div class="form-group">
-						<input type="text" class="form-control" placeholder="序号" v-model="role.rid"/>
+						<input type="text" class="form-control" placeholder="序号" v-model="tree.tid"/>
 					</div>
                     <div class="form-group">
-                    	<input type="text" class="form-control" placeholder="角色" v-model="role.rname"/>
+                    	<input type="text" class="form-control" placeholder="角色" v-model="tree.name"/>
                     </div>
                     <button type="button" class="btn btn-default" @click="show()">查找</button>
 				</form>
@@ -86,7 +71,7 @@
 		<div class="row clearfix">
 			<div class="col-md-12 column">
 				<div class="row clearfix">
-					&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-sm btn-default" @click="save()">添加角色</button>
+					 &nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-sm btn-default" @click="save()">添加角色</button>
 					<button type="button" class="btn btn-sm btn-primary" @click="del()">批量删除</button>
 					<button type="button" class="btn btn-sm btn-default" @click="all1()">全选/全不选</button>
 					<button type="button" class="btn btn-sm btn-default" @click="inverse()">反选</button>
@@ -107,14 +92,14 @@
 							<tbody id="databody">
                                 <tr v-for="l in list">
                                     <td>
-                                            <input type="checkbox" aria-label="选中" :value="l.rid" @click="check()">
+                                            <input type="checkbox" aria-label="选中" :value="l.tid" @click="check()">
                                     </td>
-                                    <td>{{l.rid}}</td>
-                                    <td>{{l.rname}}</td>
-                                    <td>{{l.des}}</td>
+                                    <td>{{l.tid}}</td>
+                                    <td>{{l.name}}</td>
+                                    <td>{{l.file}}</td>
                                     <td>
                                         <button class="btn btn-default">
-                                            <span class="glyphicon glyphicon-pencil" style="color: rgb(30, 107, 195);font-size: 15px;" @click="edit(l.rid,l.rname,l.des)"> 编辑</span>
+                                            <span class="glyphicon glyphicon-pencil" style="color: rgb(30, 107, 195);font-size: 15px;" @click="edit(l.tid,l.name,l.des)"> 编辑</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -127,7 +112,7 @@
         <!-- 按钮触发模态框 -->
            
             <!-- 模态框（Modal） -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="myModal" tabindex="-1" tree="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -142,12 +127,12 @@
                             <form>
                                 
                               <div class="form-group">
-                                <label for="rname">角色名</label>
-                                <input type="text" class="form-control" id="rname" placeholder="角色名" v-model="rname">
+                                <label for="name">角色名</label>
+                                <input type="text" class="form-control" id="name" placeholder="角色名" v-model="name">
                               </div>
                               <div class="form-group">
-                                <label for="rdes">角色描述</label>
-                                <input type="text" class="form-control" id="rdes" placeholder="角色描述" v-model="rdes">
+                                <label for="file">角色描述</label>
+                                <input type="text" class="form-control" id="file" placeholder="角色描述" v-model="file">
                               </div>
                             </form>
                         </div>
@@ -195,12 +180,12 @@
             list:'',
             page:'',
             checked:'',
-            rname:'',
-            rdes:'',
-            rid:'',
+            name:'',
+            file:'',
+            tid:'',
             pageNow:1,
             pagecount:0,
-            role:''
+            tree:''
         },
         mounted:function(){
             this.show();//需要触发的函数
@@ -209,10 +194,10 @@
             show:function(){
                 flag=false;
                 this.all1();
-                this.$http.get('../roles',{params:{pageNow:this.pageNow,rid:this.role.rid,rname:this.role.rname}}).then(function(res){
+                this.$http.get('../trees',{params:{pageNow:this.pageNow,tid:this.tree.tid,name:this.tree.name}}).then(function(res){
                     this.list=res.body.list;
                     this.pagecount=res.body.page.pagecount;
-                    this.role=res.body.role
+                    this.tree=res.body.tree
                     console.info(this.pageNow);
                 },function(res){
                     console.log(res.status);
@@ -253,7 +238,7 @@
             del:function(){
                 $.ajax
                 this.check();
-                this.$http.delete('../roles',{
+                this.$http.delete('../trees',{
                     params:{checked:this.checked},
                     }).then(function(res){
                         vm.show();
@@ -262,23 +247,23 @@
                 });
                 this.show();
             },
-            edit:function(rid,rname,rdes){
-                    this.rid=rid;
-                    this.rname=rname;
-                    this.rdes=rdes;
+            edit:function(tid,name,file){
+                    this.tid=tid;
+                    this.name=name;
+                    this.file=file;
                     $("#sub").html("修改");
                     $("#myModal").modal('show');  //手动开启
             },
             save:function(){
-                this.rname='';
-                this.rdes='';
+                this.name='';
+                this.file='';
                 $("#sub").html("保存");
                 $("#myModal").modal('show');  //手动开启
             },
             action:function(str){
-                if(this.rname!=''&&this.rdes!=''){
+                if(this.name!=''&&this.file!=''){
                     if( $("#sub").html()=="保存"){
-                        this.$http.post('../roles',{rname:this.rname,des:this.rdes}).then(function(res){
+                        this.$http.post('../trees',{name:this.name,des:this.file}).then(function(res){
                             this.list=res.body;
                             console.info(this.list);
                         },function(res){
@@ -286,7 +271,7 @@
                         });
                         this.show();
                     }else{
-                         this.$http.put('../roles',{rid:this.rid,rname:this.rname,des:this.rdes}).then(function(res){
+                         this.$http.put('../trees',{tid:this.tid,name:this.name,des:this.file}).then(function(res){
                             this.list=res.body;
                             console.info(this.list);
                         },function(res){

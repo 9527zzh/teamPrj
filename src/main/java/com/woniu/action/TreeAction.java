@@ -19,30 +19,30 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woniu.model.PageBean;
 import com.woniu.model.Role;
+import com.woniu.model.Tree;
 import com.woniu.service.IRoleService;
+import com.woniu.service.ITreeService;
 
 @RestController
-@RequestMapping("roles")
-public class RoleAction {
+@RequestMapping("trees")
+public class TreeAction {
 	@Resource
-	IRoleService roleServiceImpl;
+	ITreeService treeServiceImpl;
 	
 	@GetMapping
-	public Map showRoleList(PageBean page,Role role) throws IOException {
-		List<Role> list=roleServiceImpl.findAll(page,role);
-		System.out.println(role);
+	public Map showRoleList(PageBean page,Tree tree) throws IOException {
+		List<Tree> list=treeServiceImpl.findAll(page,tree);
+		System.out.println(tree);
 		Map map=new HashMap<>();
 		map.put("list", list);
 		map.put("page", page);
-		map.put("role", role);
+		map.put("tree", tree);
 		return map;
 	}
 	@PostMapping
-	public void save(Role role) {
-		System.out.println(role.getRname());
-		System.out.println(role.getDes());
-		role.setRid(10);;
-		roleServiceImpl.add(role);
+	public void save(Tree tree) {
+		tree.setTid(10);
+		treeServiceImpl.add(tree);
 	}
 	@DeleteMapping
 	public void del(String checked) {
@@ -50,12 +50,12 @@ public class RoleAction {
 		List<Integer> list=new ArrayList<>();
 		for (int i = 1; i < str.length; i++) {
 			if (str[i]!="") {
-				roleServiceImpl.delete(Integer.valueOf(str[i]));
+				treeServiceImpl.delete(Integer.valueOf(str[i]));
 			}
 		}
 	}
 	@PutMapping
-	public void update(Role role) {
-		roleServiceImpl.update(role);
+	public void update(Tree tree) {
+		treeServiceImpl.update(tree);
 	}
 }
