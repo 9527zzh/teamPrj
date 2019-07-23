@@ -108,7 +108,7 @@
 		LEFT JOIN vehicles ve ON vr.vid=ve.vid 
 		INNER JOIN station st ON ve.sid=st.sid
 		INNER JOIN rtype rt ON ve.rtid=rt.rtid
-		ORDER BY endtime;
+		ORDER BY endtime 
   </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.woniu.model.VrecordExample" >
     <!--
