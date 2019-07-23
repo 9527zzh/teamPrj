@@ -43,4 +43,9 @@ public class DealinfoServiceImpl implements IDealinfoService {
 		return null;
 	}
 
+	@Override
+	public List<Dealinfo> findAllDealinfoDetails() {
+		return dealinfoMapper.selectDetailInfo();
+	}
+
 }

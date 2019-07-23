@@ -1,26 +1,26 @@
 package com.woniu.service.impl;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.woniu.mapper.StationMapper;
+import com.woniu.mapper.RtypeMapper;
 import com.woniu.mapper.StrecordMapper;
-import com.woniu.model.StationStatusRecord;
+import com.woniu.model.Rtype;
 import com.woniu.model.Strecord;
-import com.woniu.model.StrecordExample;
-import com.woniu.model.StrecordExample.Criteria;
 import com.woniu.service.IStrecordService;
 
 @Service
 public class StrecordServiceImpl implements IStrecordService {
 	@Resource
 	StrecordMapper strecordMapper;
+	
 	@Resource
-	StationMapper stationMapper;
+	RtypeMapper rtypeMapper;
+	
 	@Override
 	public void add(Strecord strecord) {
 		// TODO Auto-generated method stub
@@ -51,26 +51,13 @@ public class StrecordServiceImpl implements IStrecordService {
 	}
 
 	@Override
-	public List<StationStatusRecord> findAllGroupByStation() {
-		//拿到每个站点同一时间的记录
-		List<Strecord> stList = strecordMapper.selectByStation();
-		//该集合包含每一个站点的同一时间的所有分类记录（group by sid,createtime）
-		List<StationStatusRecord> strecords = new ArrayList<>();
-		for (int i = 0; i < stList.size(); i++) {
-			//创建查询条件:按站点和时间查询
-			StrecordExample se = new StrecordExample();
-			Criteria cr = se.createCriteria();
-			//创建分类对象并设置站点id、名称（按照id去站点表查询）和记录时间，并去根据该条件查询到相应的各类垃圾的记录
-			StationStatusRecord ssr = new StationStatusRecord();
-			ssr.setSid(stList.get(i).getSid());
-			ssr.setSname(stationMapper.selectByPrimaryKey(ssr.getSid()).getSname());
-			ssr.setRecordTime(stList.get(i).getCreatetime());
-			cr.andSidEqualTo(ssr.getSid());
-			cr.andCreatetimeEqualTo(ssr.getRecordTime());
-			ssr.setStrecords(strecordMapper.selectByExample(se));
-			strecords.add(ssr);
-		}
-		return strecords;
+	public HashMap<String,?> findAllByStation() {
+		//查到类型列列表
+		List<Rtype> allRtype = rtypeMapper.selectByExample(null);
+		List<HashMap<?,?>> allSirecord = strecordMapper.selectByStation(allRtype);
+		HashMap<String,Object> rtypeAndSirecord = new HashMap<>();
+		rtypeAndSirecord.put("rtypes", allRtype);
+		rtypeAndSirecord.put("strecord", allSirecord);
+		return rtypeAndSirecord;
 	}
-	
 }

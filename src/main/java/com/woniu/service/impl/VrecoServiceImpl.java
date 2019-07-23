@@ -2,13 +2,17 @@ package com.woniu.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
+import com.woniu.mapper.VrecordMapper;
 import com.woniu.model.Vrecord;
 import com.woniu.service.IVrecordService;
 @Service
 public class VrecoServiceImpl implements IVrecordService {
-
+	@Resource
+	VrecordMapper vrecordMapper;
 	@Override
 	public void add(Vrecord vrecord) {
 		// TODO Auto-generated method stub
@@ -36,6 +40,11 @@ public class VrecoServiceImpl implements IVrecordService {
 	public List<Vrecord> findAll() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Vrecord> findAllVrecordDetails() {
+		return vrecordMapper.selectDetailInfo();
 	}
 
 	

@@ -15,6 +15,16 @@
     <result column="note" property="note" jdbcType="VARCHAR" />
     <result column="count" property="count" jdbcType="INTEGER" />
   </resultMap>
+  <resultMap id="DetailInfo" type="com.woniu.model.Vrecord" extends="BaseResultMap">
+	<!--司机姓名 -->
+    <result column="uname" property="uname" jdbcType="VARCHAR" />
+    <!--所属站点id和名称 -->
+  	<result column="sid" property="sid" jdbcType="INTEGER" />
+    <result column="sname" property="sname" jdbcType="VARCHAR" />
+    <!--承运垃圾类型id和名称 -->
+  	<result column="rtid" property="rtid" jdbcType="INTEGER" />
+    <result column="rtname" property="rtname" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated
@@ -91,6 +101,15 @@
     -->
     vrid, vid, uid, starttime, endtime, note, count
   </sql>
+  <select id="selectDetailInfo" resultMap="DetailInfo">
+  	SELECT vrid ,vr.vid ,vr.uid ,uname ,ve.sid ,sname ,starttime ,endtime ,ve.rtid ,rtname ,COUNT ,note 
+  		FROM vrecord vr 
+		LEFT JOIN `user` vu ON vr.uid=vu.uid 
+		LEFT JOIN vehicles ve ON vr.vid=ve.vid 
+		INNER JOIN station st ON ve.sid=st.sid
+		INNER JOIN rtype rt ON ve.rtid=rt.rtid
+		ORDER BY endtime;
+  </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.woniu.model.VrecordExample" >
     <!--
       WARNING - @mbggenerated
