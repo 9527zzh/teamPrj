@@ -25,7 +25,7 @@ import com.woniu.service.IRoleService;
 @RequestMapping("roles")
 public class RoleAction {
 	@Resource
-	IRoleService roleServiceImpl;
+	private IRoleService roleServiceImpl;
 	
 	@GetMapping
 	public Map showRoleList(PageBean page,Role role) throws IOException {
@@ -41,7 +41,7 @@ public class RoleAction {
 	public void save(Role role) {
 		System.out.println(role.getRname());
 		System.out.println(role.getDes());
-		role.setRid(10);;
+		role.setRid(10);
 		roleServiceImpl.add(role);
 	}
 	@DeleteMapping

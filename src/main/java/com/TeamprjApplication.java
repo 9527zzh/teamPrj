@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.fasterxml.jackson.annotation.JacksonInject.Value;
+
 @SpringBootApplication
 @MapperScan("com.woniu.mapper")
 @EnableTransactionManagement

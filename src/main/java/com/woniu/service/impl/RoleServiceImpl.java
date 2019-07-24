@@ -17,7 +17,7 @@ import com.woniu.service.IRoleService;
 public class RoleServiceImpl implements IRoleService {
 
 	@Resource
-	RoleMapper roleMApper;
+	private RoleMapper roleMApper;
 	@Override
 	public void add(Role role) {
 		// TODO Auto-generated method stub

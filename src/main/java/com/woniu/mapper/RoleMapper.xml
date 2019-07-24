@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.woniu.mapper.RoleMapper" >
-<!-- <cache type=""></cache> -->
+  <cache type="com.woniu.redis.WeRedisCache"></cache>
   <resultMap id="BaseResultMap" type="com.woniu.model.Role" >
     <!--
       WARNING - @mbggenerated

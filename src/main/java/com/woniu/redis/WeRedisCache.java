@@ -3,11 +3,17 @@ package com.woniu.redis;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import javax.annotation.Resource;
+
 import org.apache.ibatis.cache.Cache;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
+import com.woniu.ApplicationContextHolder;
+
 
 public class WeRedisCache implements Cache{
 	private String id;
@@ -15,9 +21,9 @@ public class WeRedisCache implements Cache{
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 	private RedisTemplate<Object, Object> redisTemplate;
     public WeRedisCache(final String id){
-    	this.id=id;
-    	System.out.println(id);
     	this.redisTemplate=(RedisTemplate<Object, Object>) ApplicationContextHolder.getBean("redisTemplate");
+    	System.out.println(id+" "+redisTemplate);
+    	this.id=id;
     }
 	@Override
 	public String getId() {

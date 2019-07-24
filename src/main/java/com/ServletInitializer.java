@@ -1,9 +1,7 @@
-package com.example.demo;
+package com;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-
-import com.TeamprjApplication;
 
 public class ServletInitializer extends SpringBootServletInitializer {
 
