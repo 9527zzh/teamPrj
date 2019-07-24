@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.woniu.mapper.StationMapper;
 import com.woniu.model.Station;
-import com.woniu.model.StationExample;
 import com.woniu.service.IStationService;
 @Service
 public class StationServiceImpl implements IStationService {
@@ -57,5 +56,10 @@ public class StationServiceImpl implements IStationService {
 		return stations;
 	}
 
+	@Override
+	public Station findStationBySid(Integer sid) {
+		Station station  =  stationMapper.findStationBySid(sid);
+		return station;
+	}
 	
 }

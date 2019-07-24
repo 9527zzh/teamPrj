@@ -49,5 +49,4 @@ public class VrecoServiceImpl implements IVrecordService {
 		return vrecordMapper.selectDetailInfo(new RowBounds(pb.getOffset(),pb.getLimit()));
 	}
 
-	
 }

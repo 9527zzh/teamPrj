@@ -102,4 +102,6 @@ public interface VrecordMapper {
      * @mbggenerated Mon Jul 22 16:08:19 CST 2019
      */
     int updateByPrimaryKey(Vrecord record);
+    
+    List<Vrecord>  selectByVid();
 }

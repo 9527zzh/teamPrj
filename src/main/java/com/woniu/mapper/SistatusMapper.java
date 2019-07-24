@@ -2,6 +2,8 @@ package com.woniu.mapper;
 
 import com.woniu.model.Sistatus;
 import com.woniu.model.SistatusExample;
+import com.woniu.model.Ststatus;
+
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -93,4 +95,7 @@ public interface SistatusMapper {
      * @mbggenerated Wed Jul 17 14:45:57 CST 2019
      */
     int updateByPrimaryKey(Sistatus record);
+    
+    List<Sistatus> selectBySiid(Integer siid);//根据sid查当前站点的状态集合
+
 }

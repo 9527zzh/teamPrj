@@ -12,6 +12,11 @@
     <result column="rtid" property="rtid" jdbcType="INTEGER" />
     <result column="count" property="count" jdbcType="INTEGER" />
   </resultMap>
+  
+  <select id="selectBySiid" resultMap="BaseResultMap">
+  select * from sistatus where siid = #{siid}
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated

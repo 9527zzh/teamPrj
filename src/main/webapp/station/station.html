@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"
+	charset="UTF-8">
+<title>数据统计</title>
+<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!-- 此处应注意，必须先导入jquery再导入bootstrap的js -->
+<script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.6.10/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+<script>
+		/*拿到上个页面传过来的sid值  在进行查询展示页面*/
+		var id = window.location.href.split("?")[1].split("=")[1]
+		console.info(id)
+</script>
+</head>
+<body>
+<div id="app">
+<div class="container">
+<div class="row clearfix">
+	<div class="col-md-12 column">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="navbar-header">
+				 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span>
+					 <span class="icon-bar"></span>
+					 <span class="icon-bar"></span>
+				 </button>
+				 <a class="navbar-brand" href="#">首页</a>
+			</div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					
+					<li class="dropdown">
+       <a href=" " class="dropdown-toggle" data-toggle="dropdown">垃圾站点当前记录<strong class="caret"></strong></a>
+      <ul class="dropdown-menu">
+		<li>
+			<a href="#" @click="showtb1()">垃圾站点当前记录</a>
+					</li>
+					<li>
+						 <a href="#" @click="findSiteInfo()">下属站点当前记录</a>
+					</li>
+					<li>
+ 				<a href="#" @click="findVehiclesInfo()">当前站点的出车记录</a>						
+					</li>
+      </ul>
+     </li>
+				</ul>
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" />
+					</div> <button type="submit" class="btn btn-default">查找</button>
+				</form>
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						 <a href="#">导出报表</a>
+					</li>
+					<li class="dropdown">
+						 <a href="#" class="dropdown-toggle" data-toggle="dropdown">图表统计<strong class="caret"></strong></a>
+						<ul class="dropdown-menu">
+							<li>
+								 <a href="#">垃圾站点状态</a>
+							</li>
+							<li>
+								 <a href="#">Another action</a>
+							</li>
+							<li class="divider">
+							</li>
+							<li>
+								 <a href="#">Separated link</a>
+							</li>
+							<li class="divider">
+							</li>
+							<li>
+								 <a href="#">One more separated link</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			
+		</nav>
+	</div>
+</div>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					当前垃圾状态修改
+				</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>名称</th>
+      <th>总量</th>
+    </tr>
+  </thead>
+  <tbody>
+  	<div id="mess1" class="alert alert-success" style="display:none">成功！很好地完成了提交。</div>
+  <!--控制如何展示不同的v-model -->
+  <template v-if="state==1">
+  <tr v-for="(st1,index) in stations.ststatus">
+    	<template v-for="tp in types">
+    		<td v-if="tp.rtid==st1.rtid">{{tp.rtname}}</td>
+    	</template>
+      <td><input v-model="st1.count"></input></td>
+    </tr>
+ </template>
+  <template v-if="state==2">
+  <tr v-for="(st2,index) in aa">
+    	<template v-for="tp in types">
+    		<td v-if="tp.rtid==st2.rtid">{{tp.rtname}}</td>
+    	</template>
+      <td><input v-model="st2.count"></input></td>
+    </tr>
+ </template>
+  </tbody>
+</table>
+			</div>
+			<div class="modal-footer">
+				<button  type="button" class="btn btn-default" data-dismiss="modal" >关闭
+				</button>
+				<button type="button" class="btn btn-primary" @click="changeData()">
+					提交更改
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+<!--第一个表格 显示垃圾站的信息-->
+	<table class="table table-hover" id="tb1">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>垃圾站点</th>
+				<th>站长</th>
+				<template>
+					<th v-for="type in types">{{type.rtname}}</th>
+				</template>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+				<tr>
+					<td>1</td>
+					<td>{{stations.sname}}</td>
+					<td>{{stations.user.uname}}</td>
+					<template v-for="type in types">
+						<template v-for="st in stations.ststatus">
+							<td v-if="st.rtid == type.rtid">{{st.count}}</td>
+						</template>
+					</template>
+					<td><button type="button" class="btn btn-warning" data-target="#myModal"  data-toggle="modal" @click="close1()">修改</button></td>
+				</tr>
+		</tbody>
+	</table>
+	<!-- 第二个表格 显示下属投放点的位置  切换它的时候重新发送请求去查 并且切换表格内容  这个判断是为了避免出现空指针-->
+		<template v-if="sites!=null">
+<table class="table table-hover" id="tb2">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>小区名称</th>
+				<th>小区位置</th>
+				<template>
+					<th v-for="type in types">{{type.rtname}}</th>
+				</template>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<template v-for="(ss,index) in sites">
+				<tr>
+					<td>{{index+1}}</td>
+					<td>{{ss.siname}}</td>
+					<td>{{ss.position.district}}{{ss.position.street}}</td>
+					<template v-for="type in types">
+						<template v-for="st in ss.sistatus">
+							<td v-if="st.rtid == type.rtid">{{st.count}}</td>
+						</template>
+					</template>
+					<td><button type="button" class="btn btn-warning" data-target="#myModal"  data-toggle="modal" @click="close1(index)">修改</button></td>
+				</tr>
+					</template>
+		</tbody>
+	</table>
+	<!--第三个表格 展示当前站点的车辆-->
+	</template>
+<template v-if="vehicles!=null">
+<table class="table table-hover" id="tb3" style="display: none;">
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>车辆编号</th>
+				<th>司机姓名</th>
+				<th>拉货类型</th>
+				<th>发车时间</th>
+				<th>返回时间</th>
+				<th>备注<th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<template v-for="(ss,index) in vehicles">
+			  <template v-for="(cc,index) in ss.vrecord"> 
+				<tr>
+					<td>{{index+1}}</td>
+					<td>{{ss.vid}}</td>
+					<td>{{ss.rtype.rtname}}</td>
+					<td>{{cc.user.uname}}</td>
+					<td>{{cc.starttime}}</td>
+					<td>{{cc.endtime}}</td>
+					<td><button type="button" class="btn btn-warning" data-target="#myModal"  data-toggle="modal" @click="close1(index)">修改</button></td>
+				</tr>
+			  </template>
+			</template>
+		</tbody>
+	</table>
+</template>	
+</div>
+</div>
+</body>
+<script>
+var app = new Vue({
+	el: '#app',
+	data:{
+			types: null,
+		    stations:null,
+		    sites:null,
+		    state:1,//控制如何在model里展示不同的东西
+		    aa:null,//名字起得不好 临时接收点击到的数组
+		    vehicles:null
+	},
+	methods:{
+		//默认调用的方法  根据不同 的sid 给data赋值 展示当前站点的信息
+		showInfo(){
+			axios.get("../stations/"+id)
+			 .then(function(response){
+			 	console.info(response)
+				app.stations = response.data.station;
+				app.types = response.data.types;
+				app.vehicles = response.data.station.vehicles;
+			 })
+			 .catch(function (error) {
+				console.log(error);
+			 });
+		},
+		//提交更改后的数据（针对对个表格的）
+		changeData(){
+			axios.post("../ststatus",{"ststatus":this.stations.ststatus});
+			$("#mess1").toggle();
+			this.showInfo();
+		},
+		/*让提交提示框内容 并且拿到当前点击的角标*/
+		close1(index){
+		$("#mess1").hide();
+		app.aa = app.sites[index].sistatus;
+	},
+	//展示下属投放点的方法
+	findSiteInfo(){
+		$("#tb1").hide();
+		$("#tb2").show();
+		$("#tb3").hide();
+		app.state = 2;
+		//根据当前站点去找投放点
+		axios.get("../sites/"+this.stations.sid)
+			 .then(function(response){
+			 	console.info(response)
+				app.sites = response.data.site;
+				console.info(app.sites)
+				app.types = response.data.types;
+			 })
+			 .catch(function (error) {
+			 	console.log(error);
+			 });
+	},
+	//展示当前站点信息的方法
+	showtb1(){
+		app.state = 1;
+		$("#tb1").show();
+		$("#tb2").hide();
+		$("#tb3").hide();
+	},
+	//展示车辆信息的函数
+	findVehiclesInfo(){
+		$("#tb1").hide();
+		$("#tb2").hide();
+		$("#tb3").show();
+		
+	}
+},
+	created() {
+		this.showInfo();
+	}
+	
+})
+</script>
+</html>
+
+

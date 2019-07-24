@@ -13,6 +13,16 @@
     <result column="cooid" property="cooid" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
   </resultMap>
+  
+  <resultMap id="selectBySid" type="com.woniu.model.Vehicles"  extends="BaseResultMap">
+  	<association property="rtype" column="rtid" select="com.woniu.mapper.RtypeMapper.selectByPrimaryKey"></association>
+ 	<collection property="vrecord" column="vid" select="com.woniu.mapper.VrecordMapper.selectByVid"></collection>
+  </resultMap>
+  
+  <select id="selectBySid" resultMap="selectBySid">
+  select * from vehicles where sid = #{sid}
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated
