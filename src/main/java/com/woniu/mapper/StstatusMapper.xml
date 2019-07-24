@@ -12,6 +12,11 @@
     <result column="sid" property="sid" jdbcType="INTEGER" />
     <result column="count" property="count" jdbcType="INTEGER" />
   </resultMap>
+  
+  <select id="selectBySid" resultMap="BaseResultMap">
+  select * from ststatus where sid = #{sid}
+  </select>
+  
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated

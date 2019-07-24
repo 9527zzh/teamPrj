@@ -15,6 +15,7 @@
     <result column="note" property="note" jdbcType="VARCHAR" />
     <result column="count" property="count" jdbcType="INTEGER" />
   </resultMap>
+ 
   <resultMap id="DetailInfo" type="com.woniu.model.Vrecord" extends="BaseResultMap">
 	<!--司机姓名 -->
     <result column="uname" property="uname" jdbcType="VARCHAR" />
@@ -25,6 +26,14 @@
   	<result column="rtid" property="rtid" jdbcType="INTEGER" />
     <result column="rtname" property="rtname" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <resultMap type="com.woniu.model.Vrecord" id="selectByVid" extends="BaseResultMap">
+  <association property="user" select="com.woniu.mapper.UserMapper.selectByPrimaryKey" column="uid"></association>
+  </resultMap>
+ 
+  <select id="selectByVid" resultMap="selectByVid">
+  select * from vrecord where vid = #{vid}
+  </select>
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated
@@ -108,7 +117,7 @@
 		LEFT JOIN vehicles ve ON vr.vid=ve.vid 
 		INNER JOIN station st ON ve.sid=st.sid
 		INNER JOIN rtype rt ON ve.rtid=rt.rtid
-		ORDER BY endtime;
+		ORDER BY endtime 
   </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.woniu.model.VrecordExample" >
     <!--

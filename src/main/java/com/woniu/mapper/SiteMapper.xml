@@ -14,6 +14,11 @@
     <result column="del" property="del" jdbcType="BIT" />
     <result column="siname" property="siname" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <resultMap type="com.woniu.model.Site" id="findSiteBySid" extends="BaseResultMap">
+    <association property="position" column="pid" select="com.woniu.mapper.PositionMapper.selectByPrimaryKey"></association>
+    <collection property="sistatus" column="siid" select="com.woniu.mapper.SistatusMapper.selectBySiid"></collection>
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated
@@ -298,4 +303,8 @@
       siname = #{siname,jdbcType=VARCHAR}
     where siid = #{siid,jdbcType=INTEGER}
   </update>
+  
+  <select id="findSiteBySid" resultMap="findSiteBySid">
+  select * from site where sid = #{sid}
+  </select>
 </mapper>

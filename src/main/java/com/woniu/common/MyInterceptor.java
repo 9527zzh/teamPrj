@@ -13,7 +13,6 @@ import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
-import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 
 

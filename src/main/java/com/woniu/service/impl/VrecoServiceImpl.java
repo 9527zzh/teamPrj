@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import com.woniu.mapper.VrecordMapper;
+import com.woniu.model.PageBean;
 import com.woniu.model.Vrecord;
 import com.woniu.service.IVrecordService;
 @Service
@@ -43,9 +45,8 @@ public class VrecoServiceImpl implements IVrecordService {
 	}
 
 	@Override
-	public List<Vrecord> findAllVrecordDetails() {
-		return vrecordMapper.selectDetailInfo();
+	public List<Vrecord> findAllVrecordDetails(PageBean pb) {
+		return vrecordMapper.selectDetailInfo(new RowBounds(pb.getOffset(),pb.getLimit()));
 	}
 
-	
 }

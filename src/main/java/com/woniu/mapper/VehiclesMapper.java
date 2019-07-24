@@ -93,4 +93,6 @@ public interface VehiclesMapper {
      * @mbggenerated Wed Jul 17 14:45:57 CST 2019
      */
     int updateByPrimaryKey(Vehicles record);
+    
+    List<Vehicles> selectBySid(Integer sid);//根据sid找车
 }

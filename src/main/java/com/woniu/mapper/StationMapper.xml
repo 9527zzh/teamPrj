@@ -23,6 +23,12 @@
    <resultMap  id="findAllStations" type="com.woniu.model.Station" extends="BaseResultMap">
    <association property="coordinate" column="cooid" select="com.woniu.mapper.CoordinateMapper.selectByPrimaryKey"></association>
   </resultMap>
+  <!-- 根据sid查找站点 带出站长 并且带出当前站的垃圾信息 并带出车辆 -->
+   <resultMap  id="findStationBySid" type="com.woniu.model.Station" extends="BaseResultMap">
+  <association property="user" column="uid" select="com.woniu.mapper.UserMapper.selectByPrimaryKey"></association>
+  <collection property="ststatus" column="sid" select="com.woniu.mapper.StstatusMapper.selectBySid"></collection>
+ 	<collection property="vehicles" column="sid" select="com.woniu.mapper.VehiclesMapper.selectBySid"></collection>
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <!--
       WARNING - @mbggenerated
@@ -316,4 +322,7 @@
   select * from station 
   </select>
   
+  <select id="findStationBySid" resultMap="findStationBySid">
+  select * from station where sid = #{sid}
+  </select>
 </mapper>

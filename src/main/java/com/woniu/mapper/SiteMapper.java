@@ -2,6 +2,8 @@ package com.woniu.mapper;
 
 import com.woniu.model.Site;
 import com.woniu.model.SiteExample;
+import com.woniu.model.Station;
+
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -93,4 +95,7 @@ public interface SiteMapper {
      * @mbggenerated Wed Jul 17 14:45:57 CST 2019
      */
     int updateByPrimaryKey(Site record);
+    
+	List<Site> findSiteBySid(Integer sid);//根据sid查找投放点
+
 }

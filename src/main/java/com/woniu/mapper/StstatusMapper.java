@@ -93,4 +93,6 @@ public interface StstatusMapper {
      * @mbggenerated Wed Jul 17 14:45:57 CST 2019
      */
     int updateByPrimaryKey(Ststatus record);
+    
+    List<Ststatus> selectBySid(Integer sid);//根据sid查当前站点的状态集合
 }

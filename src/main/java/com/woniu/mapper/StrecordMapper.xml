@@ -96,7 +96,7 @@
 			 MAX(CASE rtid WHEN #{rtype.rtid} THEN count END ) "${rtype.rtid}" 
 		</foreach>
 	</if>FROM strecord str LEFT JOIN station st ON str.`sid` = st.`sid` 
-		GROUP BY sid, createtime;
+		GROUP BY sid, createtime 
    </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.woniu.model.StrecordExample" >
     <!--

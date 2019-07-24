@@ -1,11 +1,11 @@
 package com.woniu.model;
 
 public class PageBean {
-	private Integer offset;
-	private Integer limit=1;
-	private Integer pageNow=1;
-	private Integer count;
-	private Integer pagecount;
+	private Integer offset;//limit起始行
+	private Integer limit=1;//每页行数
+	private Integer pageNow=1;//当前页码
+	private Integer count;//总行数
+	private Integer pagecount;//总页数
 	
 
 	private Integer page;

@@ -11,4 +11,5 @@ public interface IStstatusService {
 	void update(Ststatus ststatus);
 	Ststatus findOne(Integer stid);
 	List<Ststatus>  findAll();
+	void update(List<Ststatus> ststatus);//批量修改
 }
